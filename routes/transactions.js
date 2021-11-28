@@ -50,7 +50,7 @@ router.post("/", auth, async (req, res) => {
     amount: amount,
   });
   try {
-    new Fawn.Task()
+    await new Fawn.Task()
       .update(
         "useraccounts",
         { account_id: req.body.sender },
