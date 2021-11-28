@@ -51,7 +51,6 @@ router.post("/", auth, async (req, res) => {
   });
   try {
     new Fawn.Task()
-      .save("transactions", transaction)
       .update(
         "useraccounts",
         { account_id: req.body.sender },
@@ -62,6 +61,7 @@ router.post("/", auth, async (req, res) => {
         { account_id: req.body.receiver },
         { $inc: { balance: amount } }
       )
+      .save("transactions", transaction)
       .run();
     res.send(transaction);
   } catch (ex) {
