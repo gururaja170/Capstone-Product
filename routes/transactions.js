@@ -50,7 +50,7 @@ router.post("/", auth, async (req, res) => {
     amount: amount,
   });
   try {
-    await new Fawn.Task()
+    new Fawn.Task()
       .update(
         "useraccounts",
         { account_id: req.body.sender },
@@ -62,7 +62,9 @@ router.post("/", auth, async (req, res) => {
         { $inc: { balance: amount } }
       )
       .save("transactions", transaction)
-      .run();
+      .run({ useMongoose: true })
+      .then(() => res.send(transaction))
+      .catch((err) => console.log("Something happened"));
     res.send(transaction);
   } catch (ex) {
     return res.status(500).send("Internal Server Error");
