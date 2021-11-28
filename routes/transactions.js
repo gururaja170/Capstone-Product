@@ -6,7 +6,7 @@ const express = require("express");
 const auth = require("../middleware/auth");
 const router = express.Router();
 
-Fawn.init(config.get("dbURL"));
+Fawn.init(config.get("dbURL"), "twophasecommits");
 
 router.get("/", auth, async (req, res) => {
   const transactions = await Transaction.find();
