@@ -2,11 +2,13 @@ require("express-async-errors");
 const express = require("express");
 const config = require("config");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const useraccounts = require("./routes/useraccounts");
 const auth = require("./routes/auth");
 const transactions = require("./routes/transactions");
 const users = require("./routes/users");
 const app = express();
+app.use(cors());
 
 const jwtPrivateKey = config.get("jwtPrivateKey");
 if (!jwtPrivateKey) {
@@ -35,6 +37,7 @@ app.use("/api/accounts", useraccounts);
 app.use("/api/transactions", transactions);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+require("./middleware/prod")(app);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
