@@ -1,3 +1,4 @@
+require("express-async-errors");
 const express = require("express");
 const config = require("config");
 const mongoose = require("mongoose");
@@ -13,8 +14,19 @@ if (!jwtPrivateKey) {
   process.exit(1);
 }
 
+const dbURL = config.get("dbURL");
+if (!dbURL) {
+  console.error("FATAL ERROR : dbURL is not defined");
+  process.exit(1);
+}
+
 mongoose
-  .connect(config.get("dbURL"))
+  .connect(config.get("dbURL"), {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    authSource: "admin",
+    ssl: true,
+  })
   .then(() => console.log("Connected to MongoDB..."))
   .catch((err) => console.error("Connection to MongoDB Failed..."));
 
@@ -24,5 +36,5 @@ app.use("/api/transactions", transactions);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
 
-const port = process.env.PORT || 3000;
+const port = config.get("port") || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));

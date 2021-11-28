@@ -1,4 +1,4 @@
 {
   "jwtPrivateKey": "capstone_jwtPrivateKey",
-  "dbURL": "dbURL"
+  "dbURL": "capstone_dbURL"
 }

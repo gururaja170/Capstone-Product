@@ -1,4 +1,5 @@
 {
   "jwtPrivateKey": "",
-  "dbURL": "mongodb://localhost/accounts"
+  "dbURL": "",
+  "port": "3900"
 }
