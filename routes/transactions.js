@@ -1,12 +1,12 @@
 const { Transaction, validate } = require("../models/transaction");
 const { UserAccount } = require("../models/useraccount");
-const config = require("config");
+const mongoose = require("mongoose");
 const Fawn = require("fawn");
 const express = require("express");
 const auth = require("../middleware/auth");
 const router = express.Router();
-
-Fawn.init(config.get("dbURL"), "twophasecommits");
+mongoose.modelSchemas = {};
+Fawn.init(mongoose);
 
 router.get("/", auth, async (req, res) => {
   const transactions = await Transaction.find();
@@ -50,8 +50,7 @@ router.post("/", auth, async (req, res) => {
     amount: amount,
   });
   try {
-    const task = Fawn.Task();
-    task
+    new Fawn.Task()
       .update(
         "useraccounts",
         { account_id: req.body.sender },
@@ -64,8 +63,8 @@ router.post("/", auth, async (req, res) => {
       )
       .save("transactions", transaction)
       .run({ useMongoose: true })
-      .then(() => res.send(transaction))
-      .catch((err) => console.log("Something happened"));
+      .then(res.send(transaction))
+      .catch("Something Happened");
   } catch (ex) {
     return res.status(500).send("Internal Server Error");
   }
