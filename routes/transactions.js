@@ -16,7 +16,7 @@ Fawn.init(mongoose);
 router.get("/:accnum", auth, async (req, res) => {
   const accnum = parseInt(req.params.accnum);
   const transaction = await Transaction.find()
-    .or({ sender: accnum }, { receiver: accnum })
+    .or([{ sender: accnum }, { receiver: accnum }])
     .sort("-created_at")
     .limit(10);
   if (!transaction)
