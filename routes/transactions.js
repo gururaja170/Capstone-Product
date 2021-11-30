@@ -8,13 +8,17 @@ const router = express.Router();
 mongoose.modelSchemas = {};
 Fawn.init(mongoose);
 
-router.get("/", auth, async (req, res) => {
-  const transactions = await Transaction.find();
-  res.send(transactions);
-});
+// router.get("/", auth, async (req, res) => {
+//   const transactions = await Transaction.find();
+//   res.send(transactions);
+// });
 
-router.get("/:id", auth, async (req, res) => {
-  const transaction = await Transaction.findById(req.params.id);
+router.get("/:accnum", auth, async (req, res) => {
+  const accnum = parseInt(req.params.accnum);
+  const transaction = await Transaction.find()
+    .or({ sender: accnum }, { receiver: accnum })
+    .sort("-created_at")
+    .limit(10);
   if (!transaction)
     return res.status(404).send("No Transaction found with given ID");
 
