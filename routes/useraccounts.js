@@ -12,7 +12,6 @@ router.get("/:userid", auth, async (req, res) => {
   const userAccount = await UserAccount.find({ userid: req.params.userid });
   if (!userAccount)
     return res.status(404).send("No Account found with given ID");
-
   res.send(userAccount);
 });
 
